@@ -27,11 +27,11 @@ Application layout is as follows:
 For an excellent summary of this problem see 
 [Circular Obstacle path finding](https://redblobgames.github.io/circular-obstacle-pathfinding/)
 
-This application works by constructing all external and internal bitangents (if exists), 
+This application works by constructing all external and internal bitangents (if exists and no line of sight obstructions), 
 
-and then checks to see if any open path from start and target nodes to all such nodes.
+and then checks to see if any open path from start and target nodes to all such nodes (no line of sight obstruction).
 
-Then computes any line of sight open tangent nodes to all circles in problem set,
+Then computes any line of sight start and target to open tangent nodes to all circles in problem set exists,
 
 then checks to see if start and target node is open (no line of sight obstruction),
 
