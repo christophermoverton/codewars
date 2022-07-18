@@ -45,7 +45,9 @@ The biggest challenges to this problem set is determining an open arc segment wi
 
 I'll hint there are a couple of case structures to circle to circle intersection: intersection arc less pi, and one greater than pi.
 
-Then you may want to make use of global direction of the vector (see atan2) for all intersection points and node and node for comparison testing.
+Then you may want to make use of (localized) global direction of the vector (see atan2) for all intersection points and node and node for 
+
+arc comparison testing.
 
 Also as per comments floating point errors can challenge on direction and point tangents relative line of sight tests.
 
