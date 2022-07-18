@@ -39,4 +39,15 @@ then computes arc line of sight open or closed paths and min max paths for all a
 
 once compiling this, handing graph (dictionary) object to Graph class for formatting 
 
-and completing processing with Dykstra's method.
+and completing processing with Dykstra's method.  
+
+The biggest challenges to this problem set is determining an open arc segment with possible multiple cicle to circle intersections obstructing path.
+
+I'll hint there are a couple of case structures to circle to circle intersection: intersection arc less pi, and one greater than pi.
+
+Then you may want to make use of global direction of the vector (see atan2) for all intersection points and node and node for comparison testing.
+
+Also as per comments floating point errors can challenge on direction and point tangents relative line of sight tests.
+
+If you aren't familiar with vector math, I strongly recommend reading since it helps at least in my implementation.
+
