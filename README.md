@@ -49,5 +49,7 @@ Then you may want to make use of global direction of the vector (see atan2) for 
 
 Also as per comments floating point errors can challenge on direction and point tangents relative line of sight tests.
 
-If you aren't familiar with vector math, I strongly recommend reading since it helps at least in my implementation.
+If you aren't familiar with vector math, I strongly recommend study.  I make use of both global and local coordinate systems, for instance.
+
+Useful to understand why this important.  
 
