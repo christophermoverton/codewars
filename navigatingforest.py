@@ -833,6 +833,11 @@ for id, cir in enumerate(ucircs):
             A = cir
             B = cir2
             swapAB = False 
+            ## note A B circle pair has implicit A radius >= B radius for external bitangents
+            ## this is important for direction vector from B to A in external bitangents computation.
+            ## just have to remember to swap function return values after external_bitangents 
+            ## computation.  Note this direction vector for theta rotation always points away 
+            ## from A and towards B, and determines the theta rotation axis.
             if A.r < B.r:
                 A = B
                 B = cir
