@@ -565,14 +565,14 @@ def arc_line_of_sight_2(p1vc:Vector, p2vc:Vector, a:Circle, b: Circle):
                 compare_g_l = True
         arcsegintersect = False
         if compare_g_l:
-            if dinoden_theta >= dn1thmin and dinoden_theta <= dn2thmax:
+            if dpthetamin >= dn1thmin and dpthetamin <= dn2thmax:
                 arcsegintersect = True
-            if dinode2n_theta >= dn1thmin and dinode2n_theta <= dn2thmax:
+            if dpthetamax >= dn1thmin and dpthetamax <= dn2thmax:
                 arcsegintersect = True
         else:
-            if dinoden_theta <= dn1thmin or dinoden_theta >= dn2thmax:
+            if dpthetamin <= dn1thmin or dpthetamin >= dn2thmax:
                 arcsegintersect = True
-            if dinode2n_theta <= dn1thmin or dinode2n_theta >= dn2thmax:
+            if dpthetamax <= dn1thmin or dpthetamax >= dn2thmax:
                 arcsegintersect = True
         dp_compare_g_l = False
         if dpthetamax-dpthetamin <= math.pi:
@@ -618,17 +618,17 @@ def arc_line_of_sight_2(p1vc:Vector, p2vc:Vector, a:Circle, b: Circle):
             t2 = dinode2n_theta >= dpthetamin and dinode2n_theta <= dpthetamax
             if t1 and t2:
                 nodepath = False
-                if a1_sign < 0:
-                    pathsign = 1
-                else:
-                    pathsign -1
+            if a1_sign < 0:
+                pathsign = 1
             else:
-                if a1_sign < 0:
-                    pathsign = 1
-                else:
-                    pathsign = -1 
+                pathsign -1
+            # else:
+            #     if a1_sign < 0:
+            #         pathsign = 1
+            #     else:
+            #         pathsign = -1 
         else:
-            t1 = dinoden_theta <= dpthetamin or dinode2n_theta >= dpthetamax
+            t1 = dinoden_theta <= dpthetamin or dinoden_theta >= dpthetamax
             t2 = dinode2n_theta <= dpthetamin or dinode2n_theta >= dpthetamax 
             if t1 and t2:
                 nodepath = False
@@ -679,8 +679,8 @@ def line_of_sight_Tracking(p1vc: Vector, p2vc: Vector, current_tracking, results
         print('tpath_sign' + str(tpath_sign))
         if openseg != open_path:
             return False
-        if path_sign != tpath_sign:
-            return False
+        # if path_sign != tpath_sign:
+        #     return False
     return True
 
 def checkArcLineofSight(p1vc:Vector,p2vc:Vector, ucircs, cid, c:Circle):
@@ -708,10 +708,16 @@ def checkArcLineofSight(p1vc:Vector,p2vc:Vector, ucircs, cid, c:Circle):
               
     return {'arclineofsight':True, 'minarcpath':minarcpath}  
 
-a, b = Point(-3.5,0.1), Point(3.5,0.0)
-r = 2.01
-c = [Circle(Point(0,0), 1), Circle(Point(r,0), 1), Circle(Point(r*0.5, r*math.sqrt(3)/2), 1), Circle(Point(-r*0.5, r*math.sqrt(3)/2), 1),
-        Circle(Point(-r, 0), 1), Circle(Point(r*0.5, -r*math.sqrt(3)/2), 1), Circle(Point(-r*0.5, -r*math.sqrt(3)/2), 1)]
+a, b = Point(0, 1), Point(0, -1)
+c = [Circle(Point(0,0), 0.8), Circle(Point(3.8,0), 3.2), Circle(Point(-3.5,0), 3), Circle(Point(-7,0), 1)]
+
+# a, b = Point(-3, 1), Point(4.25, 0)
+# c = [Circle(Point(0,0), 2.5), Circle(Point(1.5,2), 0.5), Circle(Point(3.5,1), 1), Circle(Point(3.5,-1.7), 1.2)]
+
+# a, b = Point(-3.5,0.1), Point(3.5,0.0)
+# r = 2.01
+# c = [Circle(Point(0,0), 1), Circle(Point(r,0), 1), Circle(Point(r*0.5, r*math.sqrt(3)/2), 1), Circle(Point(-r*0.5, r*math.sqrt(3)/2), 1),
+#         Circle(Point(-r, 0), 1), Circle(Point(r*0.5, -r*math.sqrt(3)/2), 1), Circle(Point(-r*0.5, -r*math.sqrt(3)/2), 1)]
 
 ## build circle exclusion list where circle is interior to circle
 ## using kdtrees for fast nearest neighbor search
@@ -823,7 +829,23 @@ for id, cir in enumerate(ucircs):
                 edges+=1 
                 node_id+=2
         try:
-            C,F,D,E = external_bitangents(cir,graph[id2]['circle'])
+            cir2 = graph[id2]['circle']
+            A = cir
+            B = cir2
+            swapAB = False 
+            if A.r < B.r:
+                A = B
+                B = cir
+                swapAB = True
+            C,F,D,E = external_bitangents(A,B)
+            if swapAB:
+                ##copyC = C.copy()
+                copyF = F.copy()
+                F = C.copy()
+                C = copyF
+                copyE = E.copy()
+                E = D.copy()
+                D = copyE
         except Exception as e:
             print('no external bitangents')
             print(e)
