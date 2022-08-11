@@ -12,96 +12,7 @@ class Circle(NamedTuple):
     ctr: Point
     r:   float
 
-class Vector:
-    def dot(self, a):
-        return self.x*a.x + self.y*a.y
-    def magnitude(self):
-        return math.sqrt(self.x*self.x+self.y*self.y)
-    def normalize(self):
-        d = self.magnitude()
-        xp = self.x/d  
-        if abs(xp) < 1e-4:
-            xp = math.modf(xp)[1]
-        return Vector(xp, self.y/d)
-    def angleBetweenVectors(self, b):
-        dotab = self.dot(b)
-        maga = self.magnitude()
-        magb = b.magnitude()
-        cos_theta = dotab/(maga*magb)
-        abs_cos_theta = math.fabs(cos_theta)
-        if abs_cos_theta > 1.0:
-            if abs_cos_theta - 1.0 < 1e-5:
-                cos_theta = math.modf(cos_theta)[1]
-            else:
-                raise ValueError('Invalid arguments (vectors not normalized?)')
-        return math.acos(cos_theta)
-    def angleBetweenVectors_direction_signed(self, b):
-        ## east counter clockwise signed
-        return math.atan2(self.x*b.y - self.y*b.x, self.x*b.x+self.y*b.y)
-    def rotate(self, theta):
-        xp = self.x*math.cos(theta)- self.y*math.sin(theta)
-        yp = self.x*math.sin(theta)+ self.y*math.cos(theta)
-        return Vector(xp,yp)
-    def add(self, b):
-        return Vector(self.x+b.x, self.y+b.y)
-    def sub(self, b):
-        return Vector(self.x-b.x, self.y-b.y)
-    def mult(self, c):
-        ##scalar mult
-        return Vector(self.x*c, self.y*c)
-    def direction(self):
-        ## returns angle in radians
-        xp = self.x 
-        yp = self.y 
-        
-        theta = 0
-        if xp > 0 and yp >= 0:
-            theta = abs(math.atan(yp/xp))
-        if xp == 0:
-            if yp > 0:
-                return math.pi/2
-            else:
-                return math.pi+math.pi/2
-        if xp < 0 and yp >= 0:
-            theta = math.pi - abs(math.atan(yp/xp))
-        if xp < 0 and yp <= 0:
-            theta = math.pi + abs(math.atan(yp/xp))
-        if xp > 0 and yp <= 0:
-            theta = 2*math.pi - abs(math.atan(yp/xp))
-        return theta
-        
-    def direction_atan2(self):
-        cos_theta = self.y/self.x
-        abs_cos_theta = math.fabs(cos_theta)
-        if abs_cos_theta > 1.0:
-            if abs_cos_theta - 1.0 < 1e-5:
-                cos_theta = math.modf(cos_theta)[1]
-            else:
-                raise ValueError('Invalid arguments (vectors not normalized?)')
-        return math.acos(cos_theta)        
-            
-        if xp and yp:
-            return theta
-        elif not xp and yp:
-            return math.pi - theta
-        elif not xp and not yp:
-            return math.pi + theta
-        else:
-            return 2*math.pi - theta
-    def projection_onto_self(self, u):
-        ## self is v
-        v = self.normalize()
-        udotv = self.dot(v)
-        return v.mult(udotv)
-
-    def copy(self):
-        return Vector(self.x, self.y)
-
-    def print_vec(self):
-        print(str(self.x)+','+str(self.y))
-    def __init__(self, x,y):
-        self.x = x
-        self.y = y
+s
 
 class Graph(object):
     def __init__(self, nodes, init_graph):
@@ -336,21 +247,29 @@ def arclength_between_nodes(a: Vector, b:Vector, c:Circle):
     return (abs(c.r *theta),theta)
 
 def arclength_of_circle(a: Circle):
-    return 2*math.pi*a.r
+    return 2.0*round(math.pi,7)*a.r
 
 def point_Circle_tangents(a: Vector, b:Circle):
     bv = Vector(b.ctr.x, b.ctr.y)
-    abv = bv.sub(a)
-    abvmag = abv.magnitude()
-    theta = math.asin(b.r/abvmag)
-    tmag = math.sqrt(abvmag*abvmag -b.r*b.r)
-    abvn = abv.normalize()
-    tr1 = abvn.rotate(theta)
-    t1 = tr1.mult(tmag)
-    tr2 = abvn.rotate(-theta)
-    t2 = tr2.mult(tmag)
-
-    return [t1.add(a),t2.add(a)]
+    # abv = bv.sub(a)
+    # abvmag = abv.magnitude()
+    # theta = math.asin(b.r/abvmag)
+    # tmag = math.sqrt(abvmag*abvmag -b.r*b.r)
+    # abvn = abv.normalize()
+    # tr1 = abvn.rotate(theta)
+    # t1 = tr1.mult(tmag)
+    # tr2 = abvn.rotate(-theta)
+    # t2 = tr2.mult(tmag)
+    #t1.add(a),t2.add(a)
+    bav = a.sub(bv)
+    abvmag = bav.magnitude()
+    theta = math.acos(b.r/abvmag)
+    bavn = bav.normalize()
+    tr1 = bavn.rotate(theta)
+    tr2 = bavn.rotate(-theta)
+    t1 = tr1.mult(b.r)
+    t2 = tr2.mult(b.r)
+    return [t1.add(bv),t2.add(bv)]
 
 def circle_in_circle(a: Circle, b: Circle):
     ax = a.ctr.x
@@ -779,7 +698,7 @@ for id, cir in enumerate(ucircs):
             print(C)
             print(F)
             cf = C.sub(F)
-            distcf = cf.magnitude()
+            distcf = round(cf.magnitude(),8)
             ## check line of sight
             sightline = True
             for id3, cir3 in enumerate(ucircs):
@@ -802,7 +721,7 @@ for id, cir in enumerate(ucircs):
                 edges+=1 
                 node_id+=2
             de = D.sub(E)
-            distde = de.magnitude()
+            distde = round(de.magnitude(),8)
             ## check line of sight
             sightline = True; initNode = True
             if id2 in graph[id]['nodes']:
@@ -859,7 +778,7 @@ for id, cir in enumerate(ucircs):
         if id2 in graph[id]['nodes']:
             initNode = False
         cf = C.sub(F)
-        distcf = cf.magnitude()
+        distcf = round(cf.magnitude(),8)
         ## check line of sight
         sightline = True
         for id3, cir3 in enumerate(ucircs):
@@ -889,7 +808,7 @@ for id, cir in enumerate(ucircs):
             edges+=1
             node_id+=2   
         de = D.sub(E)
-        distde = de.magnitude()
+        distde = round(de.magnitude(),8)
         ## check line of sight
         sightline = True
         for id3, cir3 in enumerate(ucircs):
@@ -938,7 +857,7 @@ for id, cir in enumerate(ucircs):
       
             va = Vector(a.x,a.y)
             vat1 = va.sub(t1)
-            vat1mag = vat1.magnitude()
+            vat1mag = round(vat1.magnitude(),8)
             graph[id]['nodes']['start'] = {'nodepairs': {str(node_id)+' start':{'positions': [t1,va],'distance':vat1mag}}}
             graph['start']['nodes'][id] = {'nodepairs': {'start '+str(node_id):{'positions': [va,t1],'distance':vat1mag}}} 
             graph2[(node_id,strt)]={'parentids':[id, 'start'], 'distance':vat1mag}
@@ -993,7 +912,7 @@ for id, cir in enumerate(ucircs):
         if lineofsight:
             vb = Vector(b.x,b.y)
             vbt1 = vb.sub(t1)
-            vbt1mag = vbt1.magnitude()
+            vbt1mag = round(vbt1.magnitude(),8)
             graph[id]['nodes']['end'] = {'nodepairs': {str(node_id)+' end':{'positions': [t1,vb],'distance':vbt1mag}}}
             graph['end']['nodes'][id] = {'nodepairs': {'end '+str(node_id):{'positions': [vb,t1],'distance':vbt1mag}}}
             graph2[(node_id,trgt)]={'parentids':[id, 'end'], 'distance':vbt1mag}
@@ -1012,7 +931,7 @@ for id, cir in enumerate(ucircs):
         if lineofsight:
             vb = Vector(b.x,b.y)
             vbt2 = vb.sub(t2)
-            vbt2mag = vbt2.magnitude()
+            vbt2mag = round(vbt2.magnitude(),8)
             initNode = True
             if 'end' in graph[id]['nodes']:
                 initNode = False
@@ -1039,7 +958,7 @@ for id2, cir2 in enumerate(ucircs):
 if lineofsight:
     
     vavb = va.sub(vb)
-    vavbmag = vavb.magnitude()
+    vavbmag = round(vavb.magnitude(),8)
     graph['end']['nodes']['start'] = {'nodepairs': {'end'+' start':{'positions': [vb,va],'distance':vavbmag}}}
     graph['start']['nodes']['end'] = {'nodepairs': {'start '+'end':{'positions': [va,vb],'distance':vavbmag}}}
     graph2[(strt,trgt)] = {'parentids':['start', 'end'], 'distance':vavbmag}
@@ -1060,7 +979,7 @@ for key in graph3:
         print('line of sight node 16 '+str(lineofsight))
     if lineofsight:
         vavpos = va.sub(vpos)
-        vavposmag = vavpos.magnitude()
+        vavposmag = round(vavpos.magnitude(),8)
         initNode = True
         if 'start' in graph[vparent]['nodes']:
             initNode = False
@@ -1084,7 +1003,7 @@ for key in graph3:
         print('line of sight node 16 '+str(lineofsight))
     if lineofsight:
         vbvpos = vb.sub(vpos)
-        vbvposmag = vbvpos.magnitude()
+        vbvposmag = round(vbvpos.magnitude(),8)
         initNode = True
         if 'end' in graph[vparent]['nodes']:
             initNode = False
@@ -1120,11 +1039,11 @@ for id in graph4:
             if res['arclineofsight']:
                 p1vp2vdist,theta = arclength_between_nodes(p1vc,p2vc,cir)
                 arcdist = p1vp2vdist
-                if int(nid1) ==  10 and int(nid2) == 26:
-                    print('minarcpath ' + str(res['minarcpath']))
+                # if int(nid1) ==  10 and int(nid2) == 26:
+                #     print('minarcpath ' + str(res['minarcpath']))
                 if not res['minarcpath']:
                     arcdist = arclength_of_circle(cir)-arcdist
-                graph2[(int(nid1),int(nid2))] = {'parentids': [id,id], 'distance': arcdist, 'minarcpath':res['minarcpath'],'theta':theta}
+                graph2[(int(nid1),int(nid2))] = {'parentids': [id,id], 'distance': round(arcdist,8), 'minarcpath':res['minarcpath'],'theta':theta}
                 edges+=1
 #print(graph)
 print(graph2)
@@ -1163,19 +1082,23 @@ if res[0]:
 # nodekeys = [0,26,2,3,16,17,27,1]
 # nodekeys2 = [0,26,2,3,18,19,28,1]
 # nodekeys3 = [0,64,45,44,13,12,6,7,29,28,30,1]
-# def cdists(nodekeys):
-#     tdist = 0
-#     dists = []
-#     for i,nkey in enumerate(nodekeys):
-#         if i == len(nodekeys)-1:
-#             break
-#         dists.append(graph2[(nkey, nodekeys[i+1])]['distance'])
-#         tdist += graph2[(nkey,nodekeys[i+1])]['distance']
-#     print('total distance: '+ str(tdist))
-#     print('distances: '+ str(dists))
+nodekeys = [0,5,3,1]
+def cdists(nodekeys):
+    tdist = 0
+    dists = []
+    for i,nkey in enumerate(nodekeys):
+        if i == len(nodekeys)-1:
+            break
+        keyval = (nkey, nodekeys[i+1])
+        if not keyval in graph2:
+            keyval = (nodekeys[i+1],nkey)
+        dists.append(graph2[keyval]['distance'])
+        tdist += graph2[keyval]['distance']
+    print('total distance: '+ str(tdist))
+    print('distances: '+ str(dists))
 # cdists(nodekeys)
 # cdists(nodekeys2)
-
+cdists(nodekeys)
 pathstring = 'C:\\Users\\chris\\Documents\\'
 file = open(pathstring+'read.txt', 'w')
 file.write(str(graph2))
