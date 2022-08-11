@@ -129,10 +129,8 @@ def similarPair(n, k, edges):
     paths = [] ## out of recursive def traverse_graph return 
     def traverse_graph(node,graph,path):
         graphc = graph.copy()
-        paths = []
         #path_track ={node:[node]}
         path_track = [node]
-        last_path_track = set([node])
         stack = [node]
         stack_track = []
         current = None
@@ -192,87 +190,37 @@ def similarPair(n, k, edges):
                         checkback.append(i)
                         checkback.sort()
                 completed = completed.union(SortedSet(pdiff))
-                    # find = numpy.searchsorted(plistltr,i,side='right')%len(plistltr)
-                    # m = [-2,-1,0,1,2]
-                    # for n in m:
-                    #     fin = (n+find)%len(plistltr)
-                    #     spair = tuple([i,plistltr[fin]])
-                    #     spair_i = tuple([plistltr[fin],i])
-                    #     t1 = not spair in spairs and not spair_i in spairs
-                    #     if t1:
-                    #         if abs(spair[0]-spair[1]) <= k:
-                    #             count+=1
-                    #             spairs.add(spair)
-                  ##last_path_track = plist.copy()
                 if not len(stack) == 0:
                     count2 +=1
                     next_child = stack[len(stack)-1]
                     while True:
                         childp = stack_track.pop()
                         if childp == next_child:
-                            #path_track.remove(childp)
                             break
                         else:
                             path_track.pop()##.remove(childp)
                 else:
                     break
-                    ##paths.append(path_track[current].copy())
-                    #del path_track[current]
                 current = None
-            else:
-                #for child in graph[current]['children']:
-                    #npath = [*path_track[current]
-                    #npath.append(child)
-                # if graphc[current]['child_2_3']:
-                #     while True:
-                #         childp = stack_track.pop()
-                #         if childp == current:
-                #             #path_track.remove(childp)
-                #             break
-                #         else:
-                #             path_track.remove(childp)   
+            else: 
                 children = graphc[current]['children']
-                # if len(children)==3:
-                #     print(children)
                 child = children.pop()
                 if len(children)>0:
                     stack.append(current)
                     stack_track.append(current)
                     graphc[current]['child_2_3'] = True
-                #print(children)
                 stack.append(child)
                 stack_track.append(child)
                 path_track.append(child)
-                
-                #del path_track[current]
-                #print(len(path_track))
                 current = None
-        #print(len(path_track))  
-        print(count2)      
+        #print(count2) 
         return count
-                    #traverse_graph(child,graph,npath)
-    
-    def build_spairs(paths):
-        count=0
-        counted_paths = set()
-        for path in paths:
-            edgecombs = set(combinations(path,2))
-            edgecombs = edgecombs.difference(counted_paths)
-            edgecombs = edgecombs.difference(spairs)
-            edgecombs = edgecombs.difference(not_spairs)
-            #print(edgecombs)
-            for edge in edgecombs:
-               
-                a,b = edge
-                if abs(a-b)<= k:
-                    count+=1
-                    counted_paths.add(edge)
-        return count
+        
     count = 0
     graph,count2 = build_graph(edges)
-    print(graph)
+    #print(graph)
     roots = find_root(graph)
-    print(roots)
+    #print(roots)
     for root in roots:
         count += traverse_graph(root,graph,[root])
     #print(paths)
