@@ -23,6 +23,9 @@
 # to work as a real time ai bot sim in choosing moves.  One can reduce computational
 # processing time for known puzzles refining parameters search parameters, as has already 
 # been done in this code example at line 243 and 244 with vals1 and vals2 parameters.
+#An analogy to approach used here is a scatter shot DFS approach with limitations
+# to recursion runs with small tail end variations.  Algorithm can be used for faster broad and
+# slower refined scatter shot searching patterns.  
 
   
 import sys
