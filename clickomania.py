@@ -250,6 +250,7 @@ def nextMove(x, y, color, grid):
     while refined < 1:
         for i,val1 in enumerate(vals1):
             if vals2[i] < 0:
+                #decay parameter setting
                 val2 = 1.0
                 for j in range(100):
                     res = nextMove_test(x, y, color, grid, nested=False, recurs_param=val1, dgparam= val2,max_iterations=[0])
@@ -272,6 +273,7 @@ def nextMove(x, y, color, grid):
                     if j % 10 == 0:
                         print(str(j/10*10)+"percent complete for" +str(val1))
             if vals2[i] > 0:
+                #growth parameter setting
                 val2 = 1.0
                 for j in range(100):
                     res = nextMove_test(x, y, color, grid, nested=False, recurs_param=val1, dgparam= val2,max_iterations=[0])
