@@ -26,7 +26,7 @@
 #An analogy to approach used here is a scatter shot DFS approach with limitations
 # to recursion runs with small tail end variations.  Algorithm can be used for faster broad and
 # slower refined scatter shot solution searching patterns.
-# Another explanation goes as follows:  if knowing there x initial state moves, vary the inorder fraction 
+# Another explanation goes as follows:  if knowing there are  x initial state moves, vary the inorder fraction 
 # of moves one can choose, that is grow or decay the recursed nextMove choice of moves on the next round 
 # while iterating all such moves and updating the board for each chosen move sending the updated board
 # to its recursion nextMove child per sim.  A minimizing function is given to return the 
