@@ -15,7 +15,7 @@
 # relative total n tree paths and n is a very large number.
 # Unfortunately with high move complexity a single move and nextMove recursion with 
 # high color complexity signifcantly encumbers dfs and remaining block minimization
-# for game completion return results in a timely manner (for 3 and 4th test case),
+# for game completion return results in a timely manner (for 1rst and 2nd test case),
 # testing bot administrator loses our bot's game.  Hence motivation for 
 # rapid dfs convergence to desired remaining block ranges if any exist.
 # At present this script is better to solve known puzzle where solution template
@@ -25,7 +25,12 @@
 # been done in this code example at line 243 and 244 with vals1 and vals2 parameters.
 #An analogy to approach used here is a scatter shot DFS approach with limitations
 # to recursion runs with small tail end variations.  Algorithm can be used for faster broad and
-# slower refined scatter shot searching patterns.  
+# slower refined scatter shot solution searching patterns.
+# Another explanation goes as follows:  if knowing there x initial state moves, vary the inorder fraction 
+# of moves one can choose, that is grow or decay the recursed nextMove choice of moves on the next round 
+# while iterating all such moves and updating the board for each chosen move sending the updated board
+# to its recursion nextMove child per sim.  A minimizing function is given to return the 
+# a more winning board state (closer to zero blocks remaining).    
 
   
 import sys
