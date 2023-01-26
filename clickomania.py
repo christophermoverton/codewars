@@ -7,8 +7,8 @@
 # computed with y < 1 decays n recursion param to zero with large N nextMove recursion
 # By varying recursion params for move calls, one can test for solve within range
 # and more rapid convergence of solutions within desired block remainder ranges.
-# This limits computational expideture for complete dfs which on 20x10 grid
-# is cumbersome with larger n colors.  Worth noting: stochastic attempts 
+# This limits computational expenditure for complete dfs which on 20x10 grid
+# is cumbersome with larger n colors.  Worth noting: all permutation attempts 
 # at solutions for dfs attempt to minimize remaining blocks while reducing 
 # computational load for possible grid configurations may not 
 # easily solve say to 0 remaining blocks if a dfs solution is say 1 tree path
@@ -18,7 +18,13 @@
 # for game completion return results in a timely manner (for 3 and 4th test case),
 # testing bot administrator loses our bot's game.  Hence motivation for 
 # rapid dfs convergence to desired remaining block ranges if any exist.
-#   
+# At present this script is better to solve known puzzle where solution template
+# can be applied for hackkerank test credit since it is still too slow 
+# to work as a real time ai bot sim in choosing moves.  One can reduce computational
+# processing time for known puzzles refining parameters search parameters, as has already 
+# been done in this code example at line 243 and 244 with vals1 and vals2 parameters.
+
+  
 import sys
 sys.setrecursionlimit(15000)
 def grid_updater(move, x,y, grid):
@@ -235,7 +241,7 @@ def nextMove(x, y, color, grid):
     minbmoves = []
     minbmove = None
     minrankval1 = []
-    vals1 = [20]
+    vals1 = [20]  #number of attempted moves before recursing nextMove simulation
     vals2 = [-1]
     val2inc = .005
     refined = 0 
