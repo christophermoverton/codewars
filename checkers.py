@@ -9,7 +9,15 @@
 # alternate lesser ranked moves.  This bot alogrithm is a much simpler
 # not as 'smart' implementation since this only optimizes by first serve
 # highest rank board state choice for current board state.  Does not optimize
-# per simulating multiple moves in advance (outcomes).   
+# per simulating multiple moves in advance (outcomes).  
+# Per player turn, considers all possible capture and non capture moves
+# which then determine different board states which are ranked.
+# Highest board rank state per move is chosen (first serve) as optimized
+# move pattern.  This, for instance, forces piece capture if such exists
+# since this will always represent a higher immediate board state rank
+# relative non capture state.  Ranking is done solely on the basis of 
+# total number of bot (player) relative (minus) opponent pieces on board.
+#  
 def get_capture_pos(pos,move):
     cap_x = pos[0]+(move[0]-pos[0])/2
     cap_y = pos[1]+(move[1]-pos[1])/2
