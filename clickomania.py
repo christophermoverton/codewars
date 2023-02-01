@@ -34,7 +34,7 @@
 
   
 import sys
-sys.setrecursionlimit(15000)
+sys.setrecursionlimit(5000000)
 def grid_updater(move, x,y, grid):
     # grid copy for grid update return 
     ugrid = [[grid[i][j] for j in range(y)] for i in range(x)] 
@@ -115,7 +115,7 @@ global MAX_ITERATIONS
 MAX_ITERATIONS = 2000
 def nextMove_test(x, y, color, grid, nested, recurs_param, dgparam, max_iterations):
     grid_dict = {}
-    nrecurs_param = recurs_param*dgparam
+    nrecurs_param = max(recurs_param*dgparam,1)
     max_count = 0
     max_pos = None
     moves = {}
@@ -249,18 +249,19 @@ def nextMove(x, y, color, grid):
     minbmoves = []
     minbmove = None
     minrankval1 = []
-    vals1 = [20]  #number of attempted moves before recursing nextMove simulation
+    vals1 = [13]  #number of attempted moves before recursing nextMove simulation
     vals2 = [-1]
     val2inc = .005
     refined = 0 
     global MAX_ITERATIONS
-    MAX_ITERATIONS = 400
+    MAX_ITERATIONS = 500
     while refined < 1:
+        val2inc = .0009
         for i,val1 in enumerate(vals1):
             if vals2[i] < 0:
                 #decay parameter setting
                 val2 = 1.0
-                for j in range(100):
+                for j in range(0,100):
                     res = nextMove_test(x, y, color, grid, nested=False, recurs_param=val1, dgparam= val2,max_iterations=[0])
                     bcount, movlist, mov = res
                     if bcount <= minb:
@@ -282,8 +283,9 @@ def nextMove(x, y, color, grid):
                         print(str(j/10*10)+"percent complete for" +str(val1))
             if vals2[i] > 0:
                 #growth parameter setting
-                val2 = 1.0
-                for j in range(100):
+                start = 0
+                val2 = 1.0+start*val2inc
+                for j in range(start,100):
                     res = nextMove_test(x, y, color, grid, nested=False, recurs_param=val1, dgparam= val2,max_iterations=[0])
                     bcount, movlist, mov = res
                     if bcount <= minb:
@@ -306,14 +308,14 @@ def nextMove(x, y, color, grid):
                         print(str(j/10*10)+"percent complete for" +str(val1))
         # refine search
         # set search to radius about minrankval1
-        vals1 = []; radius = 1; vals2 = [-1]*(radius*2+1)*(len(minrankval1))
+        vals1 = []; radius = 2; vals2 = [-1]*(radius*2+1)*(len(minrankval1))
         
         for val1 in minrankval1:
             for i in range(val1-radius,val1+radius+1):
                 vals1.append(i)
         # minrankval1 = []
         # minbmoves = []
-        MAX_ITERATIONS = 750
+        MAX_ITERATIONS = 3000
         refined +=1
     print(minb)
     print(minbmoves)
@@ -326,7 +328,7 @@ def nextMove(x, y, color, grid):
         print(ugrid)
 
 #if name == 'main':
-import testcase_clickomania
+import testcase_clickomania2
 x,y,k = [ int(i) for i in input().strip().split() ] 
 grid = [[i for i in str(input().strip())] for _ in range(x)] 
 nextMove(x, y, k, grid)
